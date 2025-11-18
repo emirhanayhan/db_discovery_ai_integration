@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from concurrent.futures import ThreadPoolExecutor
+from cryptography.hazmat.primitives import serialization
 
 from fastapi import FastAPI
 from openai import AsyncClient
@@ -10,6 +11,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.api.healthcheck import init_healthcheck_api
 from src.api.memberships import init_memberships_api
+from src.api.membership_databases import init_membership_database_api
 from src.security.exceptions import init_exception_handler
 
 @asynccontextmanager
@@ -33,6 +35,10 @@ async def lifespan(app:FastAPI):
     # otherwise still blocks event loop
     app.thread_pool = ThreadPoolExecutor()
 
+    # required for safely transferring database credentials
+    with open("./encryption_private_key.pem", "rb") as f:
+        app.encryption_key = serialization.load_pem_private_key(f.read(), password=None)
+
     yield
 
 
@@ -43,6 +49,7 @@ def create_fastapi_app(settings):
     # init apis
     init_healthcheck_api(app)
     init_memberships_api(app)
+    init_membership_database_api(app)
 
     # init custom exception handler
     init_exception_handler(app)

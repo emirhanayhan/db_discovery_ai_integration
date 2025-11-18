@@ -3,3 +3,4 @@ __pycache__/
 *.py[codz]
 *$py.class
 .idea/
+encryption_private_key.pem
