@@ -5,6 +5,7 @@ from src.models import PkModel, SysModel
 
 class MembershipModel(SQLModel, PkModel, SysModel, table=True):
     __tablename__ = "memberships"
+    # TODO maybe consider membership-->user model but right now only membership should do the job
 
     username: str = Field(nullable=False, unique=True)
     # stored as hashed

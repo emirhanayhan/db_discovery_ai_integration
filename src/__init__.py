@@ -10,6 +10,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.api.healthcheck import init_healthcheck_api
 from src.api.memberships import init_memberships_api
+from src.security.exceptions import init_exception_handler
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):
@@ -21,6 +22,7 @@ async def lifespan(app:FastAPI):
     if app.config["run_migrations"]:
         from src.models.memberships import MembershipModel
         from src.models.roles import RoleModel
+        from src.models.membership_databases import MembershipDbModel
         async with pg_engine.begin() as connection:
             await connection.run_sync(SQLModel.metadata.create_all)
 
@@ -41,5 +43,8 @@ def create_fastapi_app(settings):
     # init apis
     init_healthcheck_api(app)
     init_memberships_api(app)
+
+    # init custom exception handler
+    init_exception_handler(app)
 
     return app
