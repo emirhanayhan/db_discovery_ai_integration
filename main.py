@@ -1,9 +1,5 @@
 import optparse
-import asyncio
 import uvicorn
-
-from hypercorn.asyncio import serve
-from hypercorn.config import Config
 
 from configs.local import local_config
 from src import create_fastapi_app

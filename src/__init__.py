@@ -25,6 +25,7 @@ async def lifespan(app:FastAPI):
         from src.models.memberships import MembershipModel
         from src.models.roles import RoleModel
         from src.models.membership_databases import MembershipDbModel
+        from src.models.database_metadata import DatabaseMetadataModel
         async with pg_engine.begin() as connection:
             await connection.run_sync(SQLModel.metadata.create_all)
 
