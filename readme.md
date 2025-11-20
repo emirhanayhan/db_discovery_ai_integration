@@ -5,7 +5,8 @@
 - Basic Authentication with membership username and password
 
 ## Authorization
-- All endpoints secured with role based system check authenticate_and_authorize middleware
+- All endpoints secured with role based system for each endpoint check authenticate_and_authorize middleware
+- permission example api.create_membership -- api.create_database
 
 ## Security
 - All credentials for membership databases secured with rsa encryption
