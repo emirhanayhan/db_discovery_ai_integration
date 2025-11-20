@@ -22,7 +22,7 @@ def config_settings(options):
 
 parser = optparse.OptionParser()
 parser.add_option("--config", default="local", help="which config to load")
-parser.add_option("--migrate", default=False, help="migrate models to db on startup")
+parser.add_option("--migrate", default=True, help="migrate models to db on startup")
 options, args = parser.parse_args()
 
 settings = config_settings(options)
