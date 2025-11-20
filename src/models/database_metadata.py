@@ -16,6 +16,6 @@ class DatabaseMetadataModel(SQLModel, PkModel, SysModel, table=True):
 
 class MetadataListItem(SQLModel):
     metadata_id: uuid.UUID
-    database_name: str  # Assuming you can join membership database table
+    database_name: str
     created_at: datetime
     table_count: int

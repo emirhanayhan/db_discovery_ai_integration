@@ -29,8 +29,6 @@ async def lifespan(app:FastAPI):
         async with pg_engine.begin() as connection:
             await connection.run_sync(SQLModel.metadata.create_all)
 
-    # app.ai_client = AsyncClient(api_key=app.config["llm_api_key"], base_url=app.config["llm_base_url"])
-
     # for cpu bound tasks to not block api
     # not forget the use it with asyncio.wrap_future
     # otherwise still blocks event loop
@@ -39,6 +37,25 @@ async def lifespan(app:FastAPI):
     # required for safely transferring database credentials
     with open("./encryption_private_key.pem", "rb") as f:
         app.encryption_key = serialization.load_pem_private_key(f.read(), password=None)
+
+    app.ai_client = AsyncClient(api_key=app.config["llm_api_key"], base_url=app.config["llm_base_url"])
+    app.classification_prompt = """
+    You are a data classifier. Classify the following values into one of the predefined types:
+        "email",
+        "phone_number",
+        "address",
+        "ip_address",
+        "credit_card",
+        "tckn",
+        "ssn",
+        "date",
+        "unknown",
+
+    Values:
+    {}
+    
+    Return a JSON object where keys are class names and values are arrays containing the items that belong to those classes. Only include classes that have at least one matching item.
+    """
 
     yield
 
